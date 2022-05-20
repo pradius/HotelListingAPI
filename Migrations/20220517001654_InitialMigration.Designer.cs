@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelListing.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220310023703_CreatedDatabase")]
-    partial class CreatedDatabase
+    [Migration("20220517001654_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -40,6 +40,26 @@ namespace HotelListing.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Countries");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Jamaica",
+                            ShortName = "JM"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Bahamas",
+                            ShortName = "BS"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Cayman Island",
+                            ShortName = "CI"
+                        });
                 });
 
             modelBuilder.Entity("HotelListing.Data.Hotel", b =>
@@ -67,17 +87,48 @@ namespace HotelListing.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Hotels");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Negril",
+                            CountryId = 1,
+                            Name = "Sandals Resort and Spa",
+                            Rating = 4.5
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "George Town",
+                            CountryId = 3,
+                            Name = "Comfort Suites",
+                            Rating = 4.2999999999999998
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "Nassua",
+                            CountryId = 2,
+                            Name = "Grand Palldium",
+                            Rating = 4.0
+                        });
                 });
 
             modelBuilder.Entity("HotelListing.Data.Hotel", b =>
                 {
                     b.HasOne("HotelListing.Data.Country", "Country")
-                        .WithMany()
+                        .WithMany("Hotels")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("HotelListing.Data.Country", b =>
+                {
+                    b.Navigation("Hotels");
                 });
 #pragma warning restore 612, 618
         }

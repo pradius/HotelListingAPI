@@ -4,7 +4,7 @@
 
 namespace HotelListing.Migrations
 {
-    public partial class CreatedDatabase : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,6 +43,36 @@ namespace HotelListing.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Countries",
+                columns: new[] { "Id", "Name", "ShortName" },
+                values: new object[] { 1, "Jamaica", "JM" });
+
+            migrationBuilder.InsertData(
+                table: "Countries",
+                columns: new[] { "Id", "Name", "ShortName" },
+                values: new object[] { 2, "Bahamas", "BS" });
+
+            migrationBuilder.InsertData(
+                table: "Countries",
+                columns: new[] { "Id", "Name", "ShortName" },
+                values: new object[] { 3, "Cayman Island", "CI" });
+
+            migrationBuilder.InsertData(
+                table: "Hotels",
+                columns: new[] { "Id", "Address", "CountryId", "Name", "Rating" },
+                values: new object[] { 1, "Negril", 1, "Sandals Resort and Spa", 4.5 });
+
+            migrationBuilder.InsertData(
+                table: "Hotels",
+                columns: new[] { "Id", "Address", "CountryId", "Name", "Rating" },
+                values: new object[] { 2, "George Town", 3, "Comfort Suites", 4.2999999999999998 });
+
+            migrationBuilder.InsertData(
+                table: "Hotels",
+                columns: new[] { "Id", "Address", "CountryId", "Name", "Rating" },
+                values: new object[] { 3, "Nassua", 2, "Grand Palldium", 4.0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Hotels_CountryId",
