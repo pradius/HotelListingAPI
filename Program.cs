@@ -1,4 +1,7 @@
 global using HotelListing.Data;
+using HotelListing.Configurations;
+using HotelListing.IRepository;
+using HotelListing.Repository;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -26,6 +29,11 @@ builder.Services.AddCors(options => {
         .AllowAnyMethod()
         .AllowAnyHeader());
 });
+
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
+
+builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
