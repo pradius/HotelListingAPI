@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HotelListing.DTO.Country;
+using HotelListing.Exceptions;
 using HotelListing.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,7 @@ public class CountriesController : ControllerBase
     {
         var country = await _countriesRepository.GetDetails(id);
 
-        if (country == null) return NotFound();
+        if (country == null) throw new NotFoundException(nameof(GetCountry), id);
 
         var result = _mapper.Map<CountryDto>(country);
 
@@ -62,7 +63,7 @@ public class CountriesController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await _countriesRepository.Exists(id)) return NotFound();
+            if (!await _countriesRepository.Exists(id)) throw new NotFoundException(nameof(PutCountry), id); 
             else throw;
         }
 
@@ -89,7 +90,7 @@ public class CountriesController : ControllerBase
     {
         var country = await _countriesRepository.GetAsync(id);
 
-        if (country == null) return NotFound();
+        if (country == null) throw new NotFoundException(nameof(DeleteCountry), id);
 
         await _countriesRepository.DeleteAsync(id);
 
