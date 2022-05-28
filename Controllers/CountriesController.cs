@@ -9,8 +9,11 @@ using Microsoft.EntityFrameworkCore;
 namespace HotelListing.Controllers;
 
 [Route("api/[controller]")]
+// [Route("api/v{version:apiVersion}/[controller]")]
+// [Route("api/v{version:apiVersion/ countries")]
 [ApiController]
 // [Authorize]
+[ApiVersion("1.0")]  // api/Countries?api-version=1.0 OR send the version in the header
 public class CountriesController : ControllerBase
 {
     private readonly ICountriesRepository _countriesRepository;
