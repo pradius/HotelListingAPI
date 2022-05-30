@@ -1,4 +1,5 @@
-﻿using HotelListing.IRepository;
+﻿using AutoMapper;
+using HotelListing.IRepository;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.Repository;
@@ -7,7 +8,7 @@ public class CountriesRepository : GenericRepository<Country>, ICountriesReposit
 {
     private readonly DatabaseContext _context;
 
-    public CountriesRepository(DatabaseContext context) : base(context)
+    public CountriesRepository(DatabaseContext context, IMapper mapper) : base(context, mapper)
     {
         _context = context;
     }

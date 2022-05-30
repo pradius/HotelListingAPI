@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HotelListing.DTO;
 using HotelListing.DTO.Country;
 using HotelListing.Exceptions;
 using HotelListing.IRepository;
@@ -26,7 +27,7 @@ public class CountriesController : ControllerBase
     }
 
     // GET: api/Countries
-    [HttpGet]
+    [HttpGet("getAll")]
     public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
     {
         var countries = await _countriesRepository.GetAllAsync();
@@ -34,6 +35,13 @@ public class CountriesController : ControllerBase
         return result;
     }
 
+    // GET: api/Countries?StartIndex=0&PageSize=25&PageNumber=1
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<GetCountryDto>>> GetPagedCountries([FromQuery] QueryParameters queryParameters)
+    {
+        return await _countriesRepository.GetAllAsync<GetCountryDto>(queryParameters);
+    }
+    
     // GET: api/Countries/5
     [HttpGet("{id}")]
     public async Task<ActionResult<CountryDto>> GetCountry(int id)

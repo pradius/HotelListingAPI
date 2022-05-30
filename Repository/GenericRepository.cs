@@ -1,4 +1,7 @@
-﻿using HotelListing.IRepository;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using HotelListing.DTO;
+using HotelListing.IRepository;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.Repository
@@ -6,8 +9,13 @@ namespace HotelListing.Repository
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly DatabaseContext _context;
+        private readonly IMapper _mapper;
 
-        public GenericRepository(DatabaseContext context) => _context = context;
+        public GenericRepository(DatabaseContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
 
         public async Task<T> AddAsync(T entity)
         {
@@ -18,7 +26,25 @@ namespace HotelListing.Repository
         public async Task<IList<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
-        }    
+        }
+
+        public async Task<PagedResult<TResult>> GetAllAsync<TResult>(QueryParameters queryParameters)
+        {
+            var totalSize = await _context.Set<T>().CountAsync();
+            var items = await _context.Set<T>()
+                .Skip(queryParameters.StartIndex)
+                .Take(queryParameters.PageSize)
+                .ProjectTo<TResult>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return new PagedResult<TResult>
+            {
+                Items = items,
+                PageNumber = queryParameters.PageNumber,
+                RecordNumber = queryParameters.PageSize,
+                TotalCount = totalSize
+            };
+        }
 
         public async Task<T> GetAsync(int? id)
         {
@@ -44,5 +70,7 @@ namespace HotelListing.Repository
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
         }
+
+        
     }
 }
