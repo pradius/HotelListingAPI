@@ -5,6 +5,7 @@ using HotelListing.Exceptions;
 using HotelListing.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.Controllers;
@@ -28,6 +29,7 @@ public class CountriesController : ControllerBase
 
     // GET: api/Countries
     [HttpGet("getAll")]
+    [EnableQuery]
     public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
     {
         var countries = await _countriesRepository.GetAllAsync();
@@ -36,7 +38,7 @@ public class CountriesController : ControllerBase
     }
 
     // GET: api/Countries?StartIndex=0&PageSize=25&PageNumber=1
-    [HttpGet]
+    [HttpGet]    
     public async Task<ActionResult<PagedResult<GetCountryDto>>> GetPagedCountries([FromQuery] QueryParameters queryParameters)
     {
         return await _countriesRepository.GetAllAsync<GetCountryDto>(queryParameters);

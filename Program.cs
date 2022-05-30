@@ -1,13 +1,14 @@
+global using HotelListing.Contracts;
 global using HotelListing.Data;
+global using HotelListing.IRepository;
+global using HotelListing.Repository;
 using HotelListing.Configurations;
-using HotelListing.Contracts;
-using HotelListing.IRepository;
 using HotelListing.Middleware;
-using HotelListing.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -24,11 +25,9 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// Serilog
-builder.Host.UseSerilog((ctx, conf) => conf
-    .WriteTo.Console().ReadFrom.Configuration(configuration));  
 
-builder.Services.AddControllers();
+// Serilog
+builder.Host.UseSerilog((ctx, conf) => conf.WriteTo.Console().ReadFrom.Configuration(configuration));  
 
 //CORS configuration
 builder.Services.AddCors(options => {
@@ -92,6 +91,13 @@ builder.Services.AddResponseCaching(options =>
 {
     options.MaximumBodySize = 1024;
     options.UseCaseSensitivePaths = false;
+});
+
+
+// ODATA
+builder.Services.AddControllers().AddOData(options =>
+{
+    options.Select().Filter().OrderBy();
 });
 
 var app = builder.Build();
